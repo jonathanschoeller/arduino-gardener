@@ -2,11 +2,9 @@
 #include <ArduinoJson.h>
 #include <LowPower.h>
 
-#undef MESSENGERBUFFERSIZE
-#define MESSENGERBUFFERSIZE 128
-
 CmdMessenger cmdMessenger = CmdMessenger(Serial, 0x13);
 const int lightPin = A1;
+const int xbeeWakePin = 2;
 const int valvePins[] = { 3, 4, 5, 6, 7 };
 const int valvePinCount = 5;
 const char* mqttTopic = "arduino";
@@ -31,8 +29,7 @@ void setup() {
   Serial.begin(9600);
   pinMode(lightPin, INPUT);
 
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
+  pinMode(LED_BUILTIN, OUTPUT);to
 
   for (int valveId = 0 ; valveId < valvePinCount ; valveId++){
     pinMode(valvePins[valveId], OUTPUT);
@@ -43,7 +40,9 @@ void setup() {
 
 void loop() {
   Serial.flush();
+  sleepXbee();
   LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
+  wakeXbee();
   delay(100);
 
   getCommands();
@@ -75,11 +74,9 @@ void openValve(int valveId, long openForMs){
   
   int valvePin = valvePins[valveId];
   digitalWrite(valvePin, HIGH);
-  toggleLight();
   delay(openForMs);
   
   digitalWrite(valvePin, LOW);
-  toggleLight();
 }
 
 void sendLightData() {
@@ -124,3 +121,14 @@ void toggleLight() {
     digitalWrite(LED_BUILTIN, LOW);
   }
 }
+
+void wakeXbee(){
+  pinMode(xbeeWakePin, OUTPUT);
+  digitalWrite(xbeeWakePin, LOW);
+}
+
+void sleepXbee(){
+  pinMode(xbeeWakePin, INPUT);
+  digitalWrite(xbeeWakePin, HIGH);
+}
+
