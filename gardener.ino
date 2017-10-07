@@ -29,7 +29,7 @@ void setup() {
   Serial.begin(9600);
   pinMode(lightPin, INPUT);
 
-  pinMode(LED_BUILTIN, OUTPUT);to
+  pinMode(LED_BUILTIN, OUTPUT);
 
   for (int valveId = 0 ; valveId < valvePinCount ; valveId++){
     pinMode(valvePins[valveId], OUTPUT);
@@ -101,12 +101,22 @@ void getCommands() {
   receivingBatch = true;
   cmdMessenger.sendCmd(sendBatch);
 
-  int startTime = millis();
+  unsigned long startTime = millis();
   
   do
   {
     cmdMessenger.feedinSerialData();
   } while(receivingBatch && millis() - startTime < 2000 /*2 seconds*/);
+}
+
+void sleepXbee(){
+  pinMode(xbeeWakePin, INPUT);
+  digitalWrite(xbeeWakePin, HIGH);
+}
+
+void wakeXbee(){
+  pinMode(xbeeWakePin, OUTPUT);
+  digitalWrite(xbeeWakePin, LOW);
 }
 
 void toggleLight() {
@@ -120,15 +130,5 @@ void toggleLight() {
     toggle = 0;
     digitalWrite(LED_BUILTIN, LOW);
   }
-}
-
-void wakeXbee(){
-  pinMode(xbeeWakePin, OUTPUT);
-  digitalWrite(xbeeWakePin, LOW);
-}
-
-void sleepXbee(){
-  pinMode(xbeeWakePin, INPUT);
-  digitalWrite(xbeeWakePin, HIGH);
 }
 
