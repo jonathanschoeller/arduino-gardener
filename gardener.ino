@@ -55,7 +55,8 @@ void loop() {
   if (now - lastLightSent > 30000)
   {
     sendLightData();
-    lastLightSent = now
+    lastLightSent = now;
+    delay(100);
   }
 }
 
