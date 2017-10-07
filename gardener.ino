@@ -7,7 +7,7 @@ const int lightPin = A1;
 const int xbeeWakePin = 2;
 const int valvePins[] = { 3, 4, 5, 6, 7 };
 const int valvePinCount = 5;
-const char* mqttTopic = "arduino";
+const char* mqttTopicLight = "arduino/light";
 
 // This is the list of recognized commands. These can be commands that can either be sent or received. 
 // In order to receive, attach a callback function to these events
@@ -39,6 +39,8 @@ void setup() {
 }
 
 void loop() {
+  static unsigned long lastLightSent = 0;
+  
   Serial.flush();
   sleepXbee();
   LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
@@ -46,6 +48,16 @@ void loop() {
   delay(100);
 
   getCommands();
+  
+  unsigned long now = millis();
+  
+  // This will be very imprecise, since millis only advances when the arduino is not asleep.
+  if (now - lastLightSent > 30000)
+  {
+    sendLightData();
+    lastLightSent = now;
+    delay(100);
+  }
 }
 
 void onTopicMessageCommand(){
@@ -86,7 +98,7 @@ void sendLightData() {
   char buffer[256];
   root.printTo(buffer, sizeof(buffer));
   cmdMessenger.sendCmdStart(topicMessageCommand);
-  cmdMessenger.sendCmdArg(mqttTopic);
+  cmdMessenger.sendCmdArg(mqttTopicLight);
   cmdMessenger.sendCmdArg(buffer);
   cmdMessenger.sendCmdEnd();
 }
