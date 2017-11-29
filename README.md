@@ -23,5 +23,7 @@ To program the Arduino, just install the [gardener.ino](gardener.ino) sketch on 
 
 ## How it Works
 The Arduino Gardener uses the [CommandMessenger](https://github.com/thijse/Arduino-CmdMessenger) library to send and receive messages using the XBee. The Arduino will go into a low power mode for eight seconds, and then wake up and send a request for instructions over CommandMessenger. It will wait until it either receives an instruction, an indication that there are no instructions, or a timeout, and then go into low power mode for eight seconds and repeat.
+
 If the Arduino Gardener receives an instruction to open the valve, it will open the connected valve for the amount of time specified in the instruction and then go back into low power mode and repeat.
+
 The Gardener will also send light information collected by the photoresistor every few minutes.
