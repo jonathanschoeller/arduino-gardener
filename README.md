@@ -6,7 +6,7 @@ An Arduino based project for remotely watering plants on battery power. This pro
 
 ## Building the Arduino Gardener
 First, you will need to build the circuit shown below. The main components are an [Arduino Nano](https://www.arduino.cc/en/Guide/ArduinoNano) and a [Digi XBee S1 802.15.4 module](https://www.digi.com/support/productdetail?pid=3257).
-![Schematic 1](img/schematic.png)
+![Schematic 1](img/schematic.png?raw=true)
 [EAGLE Schematic File](ArduinoGardener_1_0.sch)
 Most of the circuit should be pretty self-explanatory except for the three power plugs. Connect these power plugs as follows:
 
